@@ -14,20 +14,38 @@ Development must follow staged execution:
 
 ---
 
-## Stage 0 – Governance and context loading
+## Stage 0 - Governance and context loading
 
 ### Inputs
+- `governance/agent/current-workflow-state.md` (operational context only)
+- `governance/agent/constitution.md`
+- `governance/agent/short-prompts.md` (routine slice work)
+- `governance/agent/prompt-templates.md`
 - `governance/requirements/master-requirements.md`
 - `governance/security/security-spec.md`
 - `governance/adr/`
 - existing codebase
-- `governance/agent/constitution.md`
 
 ### Required actions
 1. Load and summarize governing documents.
 2. Identify ADRs and architectural constraints.
 3. Identify security rules affecting design, auth, storage, logging, exports, offline, and tenant isolation.
-4. Refuse to proceed with architecture or implementation until these are loaded.
+4. Read only additional files needed for the current task/stage after startup context is loaded.
+5. Refuse to proceed with architecture or implementation until required formal sources are loaded.
+
+### Authority rules
+- `current-workflow-state.md` is lightweight operational memory only.
+- Formal accepted records are authoritative:
+  - accepted `specs/*/review.md`
+  - `governance/requirements/traceability.md`
+  - `governance/security/security-traceability.md`
+- If there is conflict, accepted review/traceability files win.
+
+### Execution rules
+- Work one slice at a time.
+- Do not restate accepted history unless directly relevant to the current task.
+- Doc-only governance/instruction fixes do not require full slice re-review unless explicitly required.
+- Design references are visual guidance only, never source-of-truth for auth, tenant logic, security controls, or API contracts.
 
 ### Outputs
 - context summary
@@ -36,7 +54,7 @@ Development must follow staged execution:
 
 ---
 
-## Stage 1 – Requirement normalization and decomposition
+## Stage 1 - Requirement normalization and decomposition
 
 ### Goal
 Convert the large requirements document into atomic, traceable, implementation-ready requirements.
@@ -58,7 +76,7 @@ Convert the large requirements document into atomic, traceable, implementation-r
 
 ---
 
-## Stage 2 – Architecture and solution design
+## Stage 2 - Architecture and solution design
 
 ### Required inputs
 - normalized requirements
@@ -87,7 +105,7 @@ Convert the large requirements document into atomic, traceable, implementation-r
 
 ---
 
-## Stage 3 – Feature slicing and implementation planning
+## Stage 3 - Feature slicing and implementation planning
 
 ### Rules
 A feature slice must be:
@@ -103,7 +121,7 @@ A feature slice must be:
 
 ---
 
-## Stage 4 – Implementation and tests
+## Stage 4 - Implementation and tests
 
 ### Rules
 1. Read ADRs, security spec, feature spec, and plan before writing code.
@@ -114,7 +132,7 @@ A feature slice must be:
 
 ---
 
-## Stage 5 – Validation, traceability, and review
+## Stage 5 - Validation, traceability, and review
 
 ### Required actions
 1. Map code and tests back to requirement IDs.
@@ -129,7 +147,7 @@ A feature slice must be:
 
 ---
 
-## Stage 6 – Change handling and iteration
+## Stage 6 - Change handling and iteration
 
 ### Rules
 1. New requirements get new IDs.
@@ -141,10 +159,15 @@ A feature slice must be:
    - impacted tests
    - impacted ADRs
    - impacted security mapping
+5. Keep `governance/agent/current-workflow-state.md` updated when meaningful milestones occur:
+   - a slice is accepted
+   - the active slice changes
+   - a blocker is discovered or cleared
+   - the recommended next slice changes
 
 ---
 
-## Stage 6A – New requirement / change intake
+## Stage 6A - New requirement / change intake
 
 ### Goal
 Add new features or changed requirements in a controlled way without bypassing traceability, architecture review, or security review.

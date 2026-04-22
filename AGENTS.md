@@ -8,19 +8,26 @@ The detailed governance rules live under `governance/`, but those files are not 
 Read them before doing analysis, design, implementation, or review.
 
 ## Read first
-Before doing any work, read these files in order:
+Before doing any work, read these files in order for startup context:
 
-1. `governance/agent/constitution.md`
-2. `governance/agent/workflow.md`
-3. `governance/agent/prompt-templates.md`
-4. `governance/security/security-spec.md`
-5. `governance/requirements/master-requirements.md`
-6. `governance/requirements/requirements-index.md`
-7. `governance/requirements/open-questions.md`
-8. `governance/requirements/feature-map.md`
-9. `governance/requirements/traceability.md`
-10. `governance/security/security-traceability.md`
-11. all ADRs in `governance/adr/`
+1. `governance/agent/current-workflow-state.md` (operational context only)
+2. `governance/agent/constitution.md`
+3. `governance/agent/workflow.md`
+4. `governance/agent/short-prompts.md` (for routine slice work where applicable)
+5. `governance/agent/agent-design.md`
+6. `governance/agent/prompt-templates.md`
+
+Then read only the additional files needed for the current task/stage (security spec, requirements files, traceability files, ADRs, and feature slice files) before analysis, design, implementation, or review.
+
+## Authority and scope rules
+- `governance/agent/current-workflow-state.md` is lightweight operational memory only.
+- Formal accepted records remain the source of truth: accepted `specs/*/review.md`, `governance/requirements/traceability.md`, and `governance/security/security-traceability.md`.
+- If any conflict exists, accepted review/traceability files win.
+- Work one slice at a time.
+- Read only files needed for the current task.
+- Do not restate accepted history unless directly relevant to the current task.
+- Doc-only governance/instruction fixes do not require a full slice re-review unless explicitly required.
+- Design references are visual guidance only; they are never the source of truth for auth, tenant logic, security controls, or API contracts.
 
 ## How to work in this repo
 Work in stages, not in one large pass.
@@ -109,3 +116,10 @@ When completing work, report:
 - files changed
 - tests added
 - remaining gaps, assumptions, or risks
+
+## Workflow-state maintenance
+Keep `governance/agent/current-workflow-state.md` updated when meaningful milestones occur:
+- a slice is accepted
+- the active slice changes
+- a blocker is discovered or cleared
+- the recommended next slice changes

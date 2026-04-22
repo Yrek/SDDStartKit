@@ -6,17 +6,21 @@ Use these prompts as starting points and adjust only the task-specific parts.
 ## 1. Universal startup instruction
 ```md
 Read and follow, in order:
-1. governance/adr/*
-2. governance/security/security-spec.md
-3. governance/agent/constitution.md
-4. governance/agent/workflow.md
+1. governance/agent/current-workflow-state.md
+2. governance/agent/constitution.md
+3. governance/agent/workflow.md
+4. governance/agent/short-prompts.md
 5. governance/agent/prompt-templates.md
-6. governance/requirements/master-requirements.md
-7. governance/requirements/requirements-index.md
-8. governance/requirements/open-questions.md
-9. governance/requirements/feature-map.md
-10. governance/requirements/traceability.md
-11. governance/security/security-traceability.md
+
+Then read only task-relevant formal sources for the current stage:
+- governance/adr/*
+- governance/security/security-spec.md
+- governance/requirements/master-requirements.md
+- governance/requirements/requirements-index.md
+- governance/requirements/open-questions.md
+- governance/requirements/feature-map.md
+- governance/requirements/traceability.md
+- governance/security/security-traceability.md
 
 Hard rules:
 - no silent assumptions
@@ -26,6 +30,11 @@ Hard rules:
 - if sources conflict, stop and report
 - existing ADRs must be respected
 - if security-critical uncertainty exists, fail closed
+- one slice at a time
+- do not restate accepted history unless directly relevant
+- current-workflow-state is operational memory only
+- accepted review.md + requirements/security traceability are authoritative
+- design references are visual guidance only, never source-of-truth for auth/tenant/security/API contracts
 ```
 
 ## 2. Stage 0 + Stage 1 review only
@@ -787,9 +796,11 @@ At the end, report:
 We are continuing an existing governance-driven implementation workflow.
 
 You must follow:
+- governance/agent/current-workflow-state.md
 - AGENTS.md
 - governance/agent/constitution.md
 - governance/agent/workflow.md
+- governance/agent/short-prompts.md
 - governance/security/security-spec.md
 - governance/security/security-traceability.md
 - governance/requirements/traceability.md
@@ -804,6 +815,7 @@ Rules:
 - tests are mandatory
 - update review.md and traceability files
 - if blocked, stop and report instead of guessing
+- if current-workflow-state conflicts with accepted review/traceability, accepted review/traceability wins
 
 First, summarize the current repo state and identify the exact next step for the current slice before making any code changes.
 ´´´

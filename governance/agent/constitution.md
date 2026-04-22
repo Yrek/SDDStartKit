@@ -14,6 +14,14 @@ The agent must use sources in this order:
 
 If sources conflict, the agent must stop and report the conflict rather than guessing.
 
+## Operational authority rule
+- `governance/agent/current-workflow-state.md` is lightweight operational memory only.
+- Formal accepted records remain authoritative:
+  - accepted `specs/*/review.md`
+  - `governance/requirements/traceability.md`
+  - `governance/security/security-traceability.md`
+- If `current-workflow-state.md` conflicts with accepted review/traceability records, the accepted review/traceability records win.
+
 ## Hard rules
 - No silent assumptions.
 - No extra scope.
@@ -24,6 +32,18 @@ If sources conflict, the agent must stop and report the conflict rather than gue
 - Security controls must be applied where relevant, not only documented.
 - Original traceability history must be preserved.
 - Replaced or removed requirements must never be silently deleted.
+- Work one slice at a time.
+- Read only files needed for the current task/stage after startup context is loaded.
+- Do not restate accepted history unless directly relevant.
+- Doc-only governance or instruction fixes do not require a full slice re-review unless explicitly required.
+- Design references are visual guidance only and never source-of-truth for auth, tenant logic, security controls, or API contracts.
+
+## Workflow-state maintenance
+Keep `governance/agent/current-workflow-state.md` updated when meaningful milestones occur:
+- a slice is accepted
+- the active slice changes
+- a blocker is discovered or cleared
+- the recommended next slice changes
 
 ## Requirement discipline
 No feature, changed requirement, or scope expansion may be implemented unless it has first been:
