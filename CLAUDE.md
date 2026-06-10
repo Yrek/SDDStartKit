@@ -1,15 +1,31 @@
 @AGENTS.md
 
-## Claude Code
-- Follow the same governance-first workflow as defined in AGENTS.md.
-- Read `governance/agent/current-workflow-state.md` first for operational context.
-- Use `governance/agent/short-prompts.md` for routine slice work where applicable.
-- Before making code changes, summarize the current slice scope and blockers.
-- Do not implement outside the approved feature slice.
-- Always update review.md and traceability files after implementation.
-- Keep work to one slice at a time.
-- Read only files needed for the current task.
-- Do not restate accepted history unless directly relevant.
-- Doc-only governance/instruction fixes do not require full slice re-review unless explicitly required.
-- Treat design references as visual guidance only, never as the source of truth for auth, tenant logic, security controls, or API contracts.
-- `governance/agent/current-workflow-state.md` is lightweight memory only. Accepted `review.md` + requirements/security traceability files remain authoritative on conflicts.
+## Claude Code usage
+
+Follow `AGENTS.md` exactly.
+
+Before work:
+- read `governance/agent/current-workflow-state.md`
+- read `governance/agent/agent-profiles.md`
+- select exactly one profile
+- use `governance/agent/short-prompts.md` for routine work
+- read only profile-allowed files
+
+Routine implementation must not load the full governance pack.
+
+Do not implement outside the approved active feature slice.
+Do not change requirements, global governance, or security rules unless explicitly asked.
+Always update review and traceability after implementation.
+
+Use compact output:
+
+```md
+Profile:
+Slice:
+Scope:
+Changed:
+Tests:
+Traceability:
+Blockers:
+Next:
+```

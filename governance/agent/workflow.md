@@ -1,197 +1,197 @@
 # Agent Workflow
 
 ## Overview
-Development must follow staged execution:
 
-0. Governance and context loading
+This workflow is stage-based and profile-based.
+
+Every task must select exactly one profile from `agent-profiles.md` before work begins.
+
+Stages:
+
+0. Governance/context loading
 1. Requirement normalization and decomposition
 2. Architecture and solution design
 3. Feature slicing and implementation planning
 4. Implementation and tests
 5. Validation, traceability, and review
 6. Change handling and iteration
-6A. New requirement / change intake
-
----
+6A. New requirement/change intake
 
 ## Stage 0 - Governance and context loading
 
-### Inputs
-- `governance/agent/current-workflow-state.md` (operational context only)
-- `governance/agent/constitution.md`
-- `governance/agent/short-prompts.md` (routine slice work)
-- `governance/agent/prompt-templates.md`
-- `governance/requirements/master-requirements.md`
-- `governance/security/security-spec.md`
-- `governance/adr/`
-- existing codebase
+Profile: selected based on task.
 
-### Required actions
-1. Load and summarize governing documents.
-2. Identify ADRs and architectural constraints.
-3. Identify security rules affecting design, auth, storage, logging, exports, offline, and tenant isolation.
-4. Read only additional files needed for the current task/stage after startup context is loaded.
-5. Refuse to proceed with architecture or implementation until required formal sources are loaded.
+Required actions:
+1. Read `AGENTS.md`.
+2. Read `current-workflow-state.md`.
+3. Read `agent-profiles.md`.
+4. Select exactly one profile.
+5. Read the relevant short prompt if routine work.
+6. Load only task-relevant files allowed by the selected profile.
 
-### Authority rules
-- `current-workflow-state.md` is lightweight operational memory only.
-- Formal accepted records are authoritative:
-  - accepted `specs/*/review.md`
-  - `governance/requirements/traceability.md`
-  - `governance/security/security-traceability.md`
-- If there is conflict, accepted review/traceability files win.
+Authority rules:
+- `current-workflow-state.md` is operational memory only.
+- Accepted `review.md` and traceability files are authoritative.
+- Approved ADRs and security rules take precedence where applicable.
+- If sources conflict, stop and report.
 
-### Execution rules
-- Work one slice at a time.
-- Do not restate accepted history unless directly relevant to the current task.
-- Doc-only governance/instruction fixes do not require full slice re-review unless explicitly required.
-- Design references are visual guidance only, never source-of-truth for auth, tenant logic, security controls, or API contracts.
-
-### Outputs
-- context summary
-- architectural constraints
-- security constraints
-
----
+Output:
+- selected profile
+- active slice or requirement area
+- exact next action
+- blockers if any
 
 ## Stage 1 - Requirement normalization and decomposition
 
-### Goal
-Convert the large requirements document into atomic, traceable, implementation-ready requirements.
+Profile: `REQUIREMENTS`
 
-### Required actions
-1. Extract all requirements into atomic entries.
-2. Assign stable requirement IDs.
-3. Classify each item.
-4. Mark priority.
-5. Detect ambiguity, conflict, duplication, and dependencies.
-6. Group requirements into candidate feature slices.
-7. Create a first traceability scaffold.
+Goal:
+Turn broad business requirements into stable, traceable, implementation-ready requirement records.
 
-### Required outputs
-- `governance/requirements/requirements-index.md`
-- `governance/requirements/open-questions.md`
-- `governance/requirements/feature-map.md`
-- `governance/requirements/traceability.md`
+Required actions:
+- assign stable requirement IDs
+- classify type, priority, owner/source, status
+- identify dependencies
+- identify security relevance
+- update open questions
+- update feature map
+- update traceability scaffold
 
----
+Outputs:
+- updated requirements index
+- updated open questions
+- updated feature map
+- updated change log if applicable
+- recommended bounded slices
+
+No production code may be written in this stage.
 
 ## Stage 2 - Architecture and solution design
 
-### Required inputs
+Profile: `PLANNING`
+
+Required inputs:
 - normalized requirements
-- open questions
 - feature map
-- security spec
-- ADRs
+- relevant ADRs
+- relevant security specification sections
+- relevant code only if needed
 
-### Required actions
-1. Identify bounded domains/modules.
-2. Propose core entities and relationships.
-3. Define trust and authorization boundaries.
-4. Define tenant isolation strategy.
-5. Define offline sync model.
-6. Define document/versioning model.
-7. Define audit/event model.
-8. Map decisions to requirements and security controls.
+Required actions:
+- identify domain boundaries
+- identify tenant/organization boundaries
+- identify role/authorization implications
+- identify audit/event model implications
+- identify document/file/integration boundaries
+- identify security review triggers
+- propose ADRs where durable decisions are needed
 
-### Outputs
-- architecture overview
-- domain model
-- data model draft
-- trust boundary model
-- security design notes
-- ADR proposals if needed
+Outputs:
+- architecture summary or plan update
+- ADR drafts when needed
+- risks and blockers
+- recommended implementation order
 
----
+No production code may be written in this stage.
 
 ## Stage 3 - Feature slicing and implementation planning
 
-### Rules
-A feature slice must be:
-- small enough to review in one pass
-- testable end-to-end
-- traceable to requirement IDs
-- traceable to security controls if relevant
-- bounded in scope
+Profile: `PLANNING`
 
-### Required outputs per feature
+Rules:
+- one feature slice per spec folder
+- included scope must be explicit
+- excluded scope must be explicit
+- dependencies must be explicit
+- security controls must be linked where relevant
+- tests must be planned
+
+Required outputs per feature:
 - `specs/<feature>/spec.md`
 - `specs/<feature>/plan.md`
+- traceability scaffold updates where needed
 
----
+A slice is not implementation-ready until `spec.md` and `plan.md` are internally consistent.
 
 ## Stage 4 - Implementation and tests
 
-### Rules
-1. Read ADRs, security spec, feature spec, and plan before writing code.
-2. Do not implement features not listed in the approved spec.
-3. Follow least privilege and secure defaults.
-4. Keep tenant and authorization checks centralized and explicit.
-5. Generate/update tests as part of implementation.
+Profile: `IMPLEMENTATION`
 
----
+Rules:
+- implement only the approved active slice
+- no unrelated refactors
+- no extra scope
+- tests are mandatory
+- update review and traceability
+- fail closed on security ambiguity
+
+Required actions:
+- confirm active spec and plan
+- implement bounded scope
+- add/update tests
+- update `review.md`
+- update requirements traceability
+- update security traceability if applicable
+- update workflow state only for meaningful active/accepted/blocker/next-slice changes
+
+Stop if implementation requires changing requirements, architecture, or another slice.
 
 ## Stage 5 - Validation, traceability, and review
 
-### Required actions
-1. Map code and tests back to requirement IDs.
-2. Map code and tests back to security controls.
-3. List uncovered and partially covered requirements.
-4. Flag deviations from architecture, ADRs, or security spec.
+Profile: `REVIEW`, or `SECURITY` when security triggers apply.
 
-### Required outputs
-- updated `governance/requirements/traceability.md`
-- updated `governance/security/security-traceability.md`
-- `specs/<feature>/review.md`
+Required actions:
+- compare implementation to spec and plan
+- check tests against acceptance criteria
+- check scope drift
+- verify requirement traceability
+- verify security traceability where relevant
+- verify deferred items are explicit
+- classify findings by severity
 
----
+Required outputs:
+- updated `review.md`
+- corrected traceability files if needed
+- accept / not accept recommendation
+- unresolved findings and owners
 
 ## Stage 6 - Change handling and iteration
 
-### Rules
-1. New requirements get new IDs.
-2. Changed requirements get version updates.
-3. Removed requirements are marked deprecated/removed, not silently deleted.
-4. Changed requirements must update:
-   - traceability
-   - impacted feature specs
-   - impacted tests
-   - impacted ADRs
-   - impacted security mapping
-5. Keep `governance/agent/current-workflow-state.md` updated when meaningful milestones occur:
-   - a slice is accepted
-   - the active slice changes
-   - a blocker is discovered or cleared
-   - the recommended next slice changes
+Profile: usually `REQUIREMENTS` or `PLANNING`.
 
----
+Rules:
+- do not silently add scope to active implementation
+- changed requirements must be registered
+- impact must be assessed before implementation
+- accepted slices must not be rewritten without explicit change handling
+
+A change may result in:
+- updated requirement
+- new feature slice
+- revised plan
+- new ADR
+- security review
+- deferred item
 
 ## Stage 6A - New requirement / change intake
 
-### Goal
-Add new features or changed requirements in a controlled way without bypassing traceability, architecture review, or security review.
+Profile: `REQUIREMENTS`
 
-### Required actions
-1. Determine whether the request is:
-   - a new requirement
-   - a change to an existing requirement
-   - a replacement of an existing requirement
-   - a removal/deprecation request
+Goal:
+Safely handle new or changed requirements without corrupting existing traceability.
+
+Required actions:
+1. Classify as new, changed, replaced, or removed.
 2. Assign or update requirement ID and version.
-3. Add or update metadata.
-4. Identify impacted requirements, feature specs, modules, ADRs, tests, and security controls.
-5. Decide whether the change:
-   - fits an existing feature slice
-   - requires a new feature spec
-   - requires architecture review
-   - requires security review
-6. Update all relevant requirement and traceability files.
-7. Produce a short impact assessment and recommendation.
+3. Record rationale/source/date/status.
+4. Identify impacted requirements, slices, ADRs, tests, and security controls.
+5. Decide whether it fits an existing slice or requires a new slice.
+6. Update requirements governance files.
+7. Update security traceability if relevance changes.
+8. Record open questions or blockers.
 
-### Hard rules
-- no silent overwrite of existing requirements
-- no deletion without marking superseded/removed
-- preserve traceability history
-- if security-relevant, link to the security spec explicitly
-- if architecture is affected, flag for Stage 2 review before implementation
+Hard rules:
+- no code in Stage 6A
+- no silent replacement of accepted requirements
+- no deletion of historical traceability
+- no implementation until impact is clear

@@ -1,4 +1,4 @@
-# Security Specification – Besiktningsverktyg
+# Security Specification – General Baseline
 
 > This file is a mandatory coding constraint, not background documentation.
 > Every MUST/MUST NOT is a hard rule unless an explicit approved exception is documented.
@@ -9,7 +9,7 @@
 
 ## Purpose
 
-This file is the baseline security specification for the besiktningsverktyg project.
+This file is the baseline security specification for this project.
 
 It applies to:
 - the web application

@@ -1,122 +1,131 @@
 # Governance-First AI Agent Workflow Starter Pack
 
-This starter pack is a reusable placeholder pack for future software projects.
+This starter pack is a reusable governance structure for AI-assisted software projects.
 
-It provides:
-- a governance-oriented folder structure
-- agent rules and staged workflow
-- requirements, security, ADR, and traceability templates
-- spec/plan/review templates for bounded feature slices
+It is designed to keep coding agents aligned with:
+- accepted requirements
+- bounded feature slices
+- ADRs
+- security controls
+- traceability
+- current work state
 
-## Project purpose
+## Core idea
 
-Use this repository to run AI-assisted delivery with explicit governance controls:
-- plan and execute one bounded slice at a time
-- keep requirement and security traceability current
-- reduce session overhead with lightweight operational context
-- preserve formal acceptance records as source of truth
+Do not ask an agent to read everything and build everything.
 
-## How it is used across stages
+Use:
 
-The lifecycle is defined in `governance/agent/workflow.md`:
-1. Stage 0: governance/context loading
-2. Stage 1: requirement normalization/decomposition
-3. Stage 2: architecture/design
-4. Stage 3: feature slicing and planning (`spec.md` + `plan.md`)
-5. Stage 4: implementation + tests
-6. Stage 5: validation, traceability, and review (`review.md`)
-7. Stage 6/6A: controlled change handling and new-requirement intake
-
-## Session startup (lightweight)
-
-At session start, read:
-1. `governance/agent/current-workflow-state.md` (operational memory)
-2. `governance/agent/constitution.md`
-3. `governance/agent/workflow.md`
-4. `governance/agent/short-prompts.md` (routine modes)
-5. `governance/agent/agent-design.md` (operating model)
-
-Then read only files required for the current task/slice.
-
-Authority rule:
-- Formal source of truth is accepted `specs/*/review.md` plus requirements/security traceability.
-- `current-workflow-state.md` is non-authoritative operational memory.
-- If conflict exists, formal review/traceability records win.
-
-## Recommended repo setup
-
-1. Place your real requirements in:
-   - `governance/requirements/master-requirements.md`
-
-2. Place your real security specification in:
-   - `governance/security/security-spec.md`
-
-3. Add any ADRs to:
-   - `governance/adr/`
-
-4. Ask the coding agent to follow:
-   - `AGENTS.md`
-   - `governance/agent/constitution.md`
-   - `governance/agent/workflow.md`
-   - `governance/agent/short-prompts.md`
-   - `governance/agent/agent-design.md`
-
-## Quickstart command examples
-
-Use these prompt snippets with your coding agent.
-Replace `<FEATURE ID + NAME>` with your active slice.
-
-1. Readiness check
-```md
-Run `readiness-check` for:
-- <FEATURE ID + NAME>
-
-Use `governance/agent/short-prompts.md` and return:
-- readiness status
-- blockers
-- exact next action
+```text
+one selected profile
+one active slice
+minimal relevant context
+strict traceability
+compact output
 ```
 
-2. Stage 4 implementation
+## Main files
+
+- `AGENTS.md` — mandatory entrypoint for agents
+- `governance/agent/agent-profiles.md` — allowed agent profiles and read/write boundaries
+- `governance/agent/current-workflow-state.md` — lightweight operational state
+- `governance/agent/short-prompts.md` — compact routine prompts
+- `governance/agent/prompt-templates.md` — longer governance prompts, not default runtime context
+- `governance/agent/workflow.md` — staged lifecycle
+- `governance/agent/constitution.md` — mandatory rules
+- `governance/requirements/*` — requirements and traceability
+- `governance/security/*` — baseline security controls and security traceability
+- `governance/adr/*` — architectural decision records
+- `specs/<feature>/*` — bounded feature specs, plans, and reviews
+
+## Agent profiles
+
+Each task must use exactly one profile:
+
+- `REQUIREMENTS` — capture, normalize, classify, and slice requirements
+- `PLANNING` — create specs, plans, architecture notes, and ADR drafts
+- `IMPLEMENTATION` — implement one approved slice
+- `REVIEW` — review, acceptance, and doc-only corrections
+- `SECURITY` — security review and security traceability
+
+Profiles prevent the agent from loading too much context or writing to the wrong files.
+
+## Lifecycle
+
+1. Stage 0: load governance and select profile
+2. Stage 1: normalize requirements
+3. Stage 2: architecture and ADR review
+4. Stage 3: create bounded feature `spec.md` and `plan.md`
+5. Stage 4: implement one approved slice
+6. Stage 5: review, test, and update traceability
+7. Stage 6: controlled change handling
+
+## Lightweight session startup
+
+For routine work, tell the agent:
+
 ```md
-Run `stage4-implement` for:
+Follow AGENTS.md.
+Select the correct profile from governance/agent/agent-profiles.md.
+Use the matching short prompt from governance/agent/short-prompts.md.
+Load only profile-allowed context.
+```
+
+For implementation, use:
+
+```md
+Run implement-slice for:
 - <FEATURE ID + NAME>
 
 Rules:
 - one slice only
 - no extra scope
 - tests mandatory
+- update review and traceability
 - fail closed on security ambiguity
 ```
 
-3. Formal review
+For review, use:
+
 ```md
-Run `formal-review` for:
+Run review-slice for:
 - <FEATURE ID + NAME>
 
-Return:
-- findings by severity
-- required corrections
-- accept / not-accept recommendation
+Return findings by severity and accept / not accept recommendation.
 ```
 
-4. Doc-only correction
-```md
-Run `doc-only-correction` for:
-- <FEATURE ID + NAME>
+## Context budget policy
 
-Do not change production code or tests.
-Only update review/traceability/governance docs as needed.
-```
+Routine implementation should not read:
+- the full master requirements
+- all ADRs if only one is relevant
+- the full security spec unless a security trigger applies
+- prompt templates unless prompt/workflow docs are being changed
 
-5. Acceptance
-```md
-Run `accept` for:
-- <FEATURE ID + NAME>
+The active feature `spec.md` and `plan.md` are the implementation contract.
 
-Confirm:
-- no unresolved HIGH/MEDIUM findings
-- review + traceability accuracy
-- deferred items and owner
-- recommended next slice
-```
+## Source of truth
+
+Formal truth is:
+
+1. accepted `specs/*/review.md`
+2. `governance/requirements/traceability.md`
+3. `governance/security/security-traceability.md`
+4. approved ADRs
+
+`current-workflow-state.md` is only operational memory. If it conflicts with formal records, formal records win.
+
+## Recommended setup for a new project
+
+1. Put the real business requirements in `governance/requirements/master-requirements.md`.
+2. Review `governance/security/security-spec.md` and keep it as the baseline security constraint.
+3. Use `requirements-normalize` to create requirement IDs and feature slices.
+4. Use `plan-slice` to create the first `spec.md` and `plan.md`.
+5. Use `implement-slice` only after the slice is approved.
+6. Use `review-slice` and `accept-slice` before moving on.
+
+## Practical rule
+
+The agent should usually not implement directly from the master requirements file.
+
+It should implement from an approved bounded feature slice while respecting ADRs, security controls, and traceability.

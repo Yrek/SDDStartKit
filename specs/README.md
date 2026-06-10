@@ -111,6 +111,17 @@ So:
 - governance defines what must be respected
 - specs define what exact slice is currently being built
 
+## Agent profile usage
+
+Typical profile flow:
+
+- `PLANNING` creates or refines `spec.md` and `plan.md`.
+- `IMPLEMENTATION` implements only the approved slice.
+- `REVIEW` verifies implementation, tests, and traceability.
+- `SECURITY` is used when the slice touches security-sensitive behavior.
+
+The implementation agent should not read or implement directly from master requirements unless the active profile and task explicitly require it.
+
 ## Practical rule
 
 A coding agent should usually **not** implement directly from the master requirements file.
